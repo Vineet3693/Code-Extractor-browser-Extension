@@ -2,6 +2,14 @@
 
 A Chrome extension that scans any AI chat webpage, extracts all code blocks, intelligently detects file names and folder structure, and downloads everything as a ready-to-open VS Code project ZIP.
 
+## Screenshots
+
+![Code Extractor Scanning Example](assets/images/screenshot1.png)
+*Example of Code Extractor scanning Claude AI code blocks and displaying the project structure.*
+
+![Code Extractor Projects Example](assets/images/screenshot2.png)
+*Example of Code Extractor managing saved projects extracted from Outlier.*
+
 ## V2.0 New Features
 
 - **Live Scanning** — MutationObserver auto-detects new code blocks as AI streams responses, no re-scan needed
