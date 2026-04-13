@@ -1,0 +1,172 @@
+{
+  "manifest_version": 3,
+  "name": "Code Extractor & Project Builder",
+  "version": "3.0.0",
+  "description": "Scan any AI chat webpage, extract all code blocks, detect file names and folder structure, and download as a ready-to-open VS Code project ZIP. V3.0 Premium: AI file naming, team collaboration, cloud sync, custom parser builder, API access, VS Code companion, project analytics, and one-click deployment.",
+  "author": "Code Extractor Team",
+  "homepage_url": "https://github.com/code-extractor/code-extractor-extension",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png"
+    },
+    "default_title": "Code Extractor & Project Builder V3.0"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "permissions": [
+    "storage",
+    "downloads",
+    "tabs",
+    "scripting",
+    "contextMenus",
+    "sidePanel",
+    "notifications",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://app.outlier.ai/*",
+    "https://*.outlier.ai/*",
+    "https://chat.mistral.ai/*",
+    "https://poe.com/*",
+    "https://github.com/*",
+    "https://stackoverflow.com/*",
+    "https://api.vercel.com/*",
+    "https://api.netlify.com/*",
+    "https://backboard.railway.app/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": [
+        "libs/jszip.min.js",
+        "libs/FileSaver.min.js",
+        "utils/constants.js",
+        "utils/helpers.js",
+        "utils/domUtils.js",
+        "utils/regexPatterns.js",
+        "utils/languageMap.js",
+        "utils/validators.js",
+        "utils/errorHandler.js",
+        "utils/logger.js",
+        "utils/messageHandler.js",
+        "parsers/BaseParser.js",
+        "parsers/ChatGPTParser.js",
+        "parsers/ClaudeParser.js",
+        "parsers/GeminiParser.js",
+        "parsers/OutlierParser.js",
+        "parsers/MistralParser.js",
+        "parsers/PoeParser.js",
+        "parsers/GitHubParser.js",
+        "parsers/StackOverflowParser.js",
+        "parsers/GenericParser.js",
+        "parsers/ParserFactory.js",
+        "core/CodeBlockExtractor.js",
+        "core/FileNameDetector.js",
+        "core/LanguageIdentifier.js",
+        "core/TreeParser.js",
+        "core/ProjectMapper.js",
+        "core/DuplicateHandler.js",
+        "core/ProjectAssembler.js",
+        "core/CodeScanner.js",
+        "core/LiveScanner.js",
+        "core/IncrementalMerger.js",
+        "core/ScanStateManager.js",
+        "core/TabManager.js",
+        "core/SmartDuplicateDetector.js",
+        "core/AIFilenameRefiner.js",
+        "generators/ReadmeGenerator.js",
+        "generators/DependencyGenerator.js",
+        "generators/TreeVisualizer.js",
+        "generators/ZipGenerator.js",
+        "generators/IDEExport.js",
+        "utils/GitHubIntegration.js",
+        "utils/TemplateManager.js",
+        "utils/CodeValidator.js",
+        "utils/TeamCollaboration.js",
+        "utils/CloudSync.js",
+        "utils/CustomParserBuilder.js",
+        "utils/APIBridge.js",
+        "utils/VSCodeCompanion.js",
+        "utils/ProjectAnalytics.js",
+        "utils/DeploymentManager.js",
+        "content/injector.js",
+        "content/content.js"
+      ],
+      "css": [
+        "content/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*",
+        "styles/*",
+        "libs/chart.min.js",
+        "sidepanel/sidepanel.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; worker-src 'self';"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Open Code Extractor"
+    },
+    "scan-page": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Scan current page for code blocks"
+    },
+    "toggle-live-scan": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Toggle live scanning"
+    },
+    "universal-search": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "Universal search across all projects"
+    },
+    "deploy-project": {
+      "description": "Deploy current project"
+    }
+  },
+  "options_page": "sidepanel/sidepanel.html"
+}

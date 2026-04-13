@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Extractor</title>
+  <link rel="stylesheet" href="../styles/popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <button id="back-btn" class="back-btn hidden">← Back</button>
+      <h1 id="header-title">📦 Code Extractor</h1>
+      <button id="settings-toggle" class="icon-btn">⚙️</button>
+    </header>
+
+    <div id="status-bar" class="status-bar">
+      <span class="status-dot ready"></span>
+      <span id="status-text">Ready to scan</span>
+    </div>
+
+    <main class="popup-main">
+      <div id="state-initial" class="state state-initial">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p class="empty-title">Scan this page</p>
+          <p class="empty-desc">to extract code</p>
+        </div>
+        <button id="scan-btn" class="btn btn-primary btn-full">
+          <span class="btn-icon">🔍</span>
+          Scan This Page
+        </button>
+      </div>
+
+      <div id="state-scanning" class="state state-scanning hidden">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+          </div>
+          <span id="progress-percent" class="progress-text">0%</span>
+        </div>
+
+        <div id="scan-steps" class="scan-steps">
+          <div class="scan-step" data-step="1">
+            <span class="step-icon">○</span>
+            <span class="step-label">Finding code blocks</span>
+          </div>
+          <div class="scan-step" data-step="2">
+            <span class="step-icon">○</span>
+            <span class="step-label">Detecting languages</span>
+          </div>
+          <div class="scan-step" data-step="3">
+            <span class="step-icon">○</span>
+            <span class="step-label">Identifying file names</span>
+          </div>
+          <div class="scan-step" data-step="4">
+            <span class="step-icon">○</span>
+            <span class="step-label">Building project tree</span>
+          </div>
+          <div class="scan-step" data-step="5">
+            <span class="step-icon">○</span>
+            <span class="step-label">Resolving duplicates</span>
+          </div>
+          <div class="scan-step" data-step="6">
+            <span class="step-icon">○</span>
+            <span class="step-label">Assembling project</span>
+          </div>
+        </div>
+
+        <div class="live-stats">
+          <p>Found so far:</p>
+          <ul>
+            <li>📄 <span id="live-blocks">0</span> code blocks</li>
+            <li>🌳 <span id="live-trees">0</span> tree structures</li>
+            <li>🔤 <span id="live-langs">0</span> languages detected</li>
+          </ul>
+        </div>
+
+        <button id="cancel-scan-btn" class="btn btn-secondary btn-full">
+          <span class="btn-icon">⏹</span>
+          Cancel Scan
+        </button>
+      </div>
+
+      <div id="state-results" class="state state-results hidden">
+        <div class="project-header">
+          <div class="project-title-row">
+            <span class="project-label">📁 Project:</span>
+            <span id="project-name" class="project-name">extracted-project</span>
+            <button id="edit-project-name" class="icon-btn-sm">✏️</button>
+          </div>
+          <p class="project-source">Source: <span id="project-source">-</span></p>
+          <p class="project-langs">Languages: <span id="project-langs">-</span></p>
+        </div>
+
+        <div class="tree-view-container">
+          <div class="tree-view-header">Project Tree</div>
+          <div id="project-tree" class="tree-view">
+          </div>
+        </div>
+
+        <div id="unmapped-warning" class="warning-bar hidden">
+          <span>⚠️ <span id="unmapped-count">0</span> blocks couldn't be mapped</span>
+          <button id="view-unmapped-btn" class="btn-text-inline">View</button>
+        </div>
+
+        <div class="results-actions">
+          <div class="action-row">
+            <button id="save-library-btn" class="btn btn-secondary">
+              <span class="btn-icon">💾</span>
+              Save to Library
+            </button>
+            <button id="download-zip-btn" class="btn btn-primary">
+              <span class="btn-icon">📥</span>
+              Download ZIP
+            </button>
+          </div>
+          <button id="rescan-btn" class="btn btn-text btn-full">
+            <span class="btn-icon">🔄</span>
+            Re-scan Page
+          </button>
+        </div>
+      </div>
+
+      <div id="state-file-detail" class="state state-file-detail hidden">
+        <div class="file-detail-header">
+          <div class="file-title-row">
+            <span id="file-detail-icon" class="file-icon">📄</span>
+            <h2 id="file-detail-name" class="file-name-title">app.py</h2>
+          </div>
+          <p class="file-path">Path: <span id="file-detail-path">-</span> <button id="edit-file-path" class="icon-btn-sm">✏️</button></p>
+          <p class="file-meta-row">Language: <span id="file-detail-lang">-</span></p>
+          <p class="file-meta-row">Lines: <span id="file-detail-lines">0</span> | Size: <span id="file-detail-size">0 B</span></p>
+          <p class="file-meta-row">Detection: <span id="file-detail-confidence">-</span></p>
+        </div>
+
+        <div class="code-preview-container">
+          <div class="code-preview-header">Code Preview</div>
+          <pre id="code-preview" class="code-preview"><code></code></pre>
+        </div>
+
+        <div class="file-actions">
+          <button id="copy-code-btn" class="btn btn-secondary">
+            <span class="btn-icon">📋</span>
+            Copy
+          </button>
+          <button id="rename-file-btn" class="btn btn-secondary">
+            <span class="btn-icon">✏️</span>
+            Rename
+          </button>
+          <button id="remove-file-btn" class="btn btn-danger">
+            <span class="btn-icon">🗑️</span>
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <div id="state-settings" class="state state-settings hidden">
+        <div class="settings-section">
+          <h3 class="settings-section-title">🎨 Theme</h3>
+          <div class="theme-selector">
+            <label class="radio-option">
+              <input type="radio" name="theme" value="light"> Light
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="theme" value="dark" checked> Dark
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="theme" value="auto"> Auto
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">📋 Scanning</h3>
+          <div class="setting-row">
+            <span>Highlight blocks on page</span>
+            <label class="toggle">
+              <input type="checkbox" id="setting-highlight" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>Auto-scan when opened</span>
+            <label class="toggle">
+              <input type="checkbox" id="setting-autoscan">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>Scan timeout (seconds)</span>
+            <input type="number" id="setting-timeout" class="number-input" value="30" min="5" max="120">
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">📄 Duplicate Files</h3>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="duplicate-strategy" value="latest" checked> Keep latest version
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="duplicate-strategy" value="keep_both"> Keep all versions
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="duplicate-strategy" value="merge"> Merge content
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">📦 Auto-Generated Files</h3>
+          <div class="setting-row">
+            <span>Include README.md</span>
+            <label class="toggle">
+              <input type="checkbox" id="setting-readme" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>Include .gitignore</span>
+            <label class="toggle">
+              <input type="checkbox" id="setting-gitignore" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>Include dependencies file</span>
+            <label class="toggle">
+              <input type="checkbox" id="setting-dependencies">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">💾 Storage</h3>
+          <div class="storage-info">
+            <p>Saved projects: <span id="storage-projects">0</span></p>
+            <p>Storage used: <span id="storage-used">0 B</span></p>
+          </div>
+          <div class="storage-actions">
+            <button id="export-data-btn" class="btn btn-secondary">Export Data</button>
+            <button id="import-data-btn" class="btn btn-secondary">Import</button>
+            <button id="clear-storage-btn" class="btn btn-danger">Clear</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">ℹ️ About</h3>
+          <div class="about-info">
+            <p>Version: 3.0.0</p>
+            <div class="about-links">
+              <button id="rate-btn" class="btn-text-inline">Rate ⭐</button>
+              <button id="bug-btn" class="btn-text-inline">Report Bug</button>
+              <button id="github-btn" class="btn-text-inline">GitHub</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="state-history" class="state state-history hidden">
+        <div class="history-search">
+          <input type="text" id="history-search-input" class="search-input" placeholder="🔍 Search projects...">
+        </div>
+        <div id="history-list" class="history-list">
+        </div>
+        <div class="history-footer">
+          <p>Showing <span id="history-showing">0</span> of <span id="history-total">0</span> projects</p>
+          <button id="load-more-btn" class="btn btn-text hidden">Load More</button>
+        </div>
+      </div>
+
+      <div id="state-unmapped" class="state state-unmapped hidden">
+        <div class="unmapped-intro">
+          <p>⚠️ These code blocks couldn't be automatically mapped to files.</p>
+          <p>You can assign file names manually.</p>
+        </div>
+        <div id="unmapped-list" class="unmapped-list">
+        </div>
+        <button id="done-unmapped-btn" class="btn btn-primary btn-full">
+          ✅ Done — Return to Project View
+        </button>
+      </div>
+    </main>
+
+    <footer class="popup-footer">
+      <button id="recent-projects-btn" class="btn btn-text">📂 Recent Projects (<span id="recent-count">0</span>)</button>
+      <button id="open-sidepanel-btn" class="btn btn-text">Full View →</button>
+    </footer>
+  </div>
+
+  <script src="../utils/constants.js"></script>
+  <script src="../utils/helpers.js"></script>
+  <script src="../utils/domUtils.js"></script>
+  <script src="../utils/regexPatterns.js"></script>
+  <script src="../utils/languageMap.js"></script>
+  <script src="../utils/validators.js"></script>
+  <script src="../utils/errorHandler.js"></script>
+  <script src="../utils/logger.js"></script>
+  <script src="../utils/messageHandler.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

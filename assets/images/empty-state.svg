@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect x="40" y="50" width="120" height="100" rx="8" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="100" y="95" text-anchor="middle" fill="#8a8d91" font-size="14" font-family="sans-serif">No projects yet</text>
+  <text x="100" y="115" text-anchor="middle" fill="#666688" font-size="11" font-family="sans-serif">Scan a page to get started</text>
+  <circle cx="100" cy="70" r="16" fill="none" stroke="#4a5568" stroke-width="2"/>
+  <path d="M94 70 L98 74 L106 66" stroke="#4a5568" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

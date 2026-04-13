@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head><title>Claude Sample - Web Scraper</title></head>
+<body>
+<div class="conversation">
+  <div class="human-message">
+    <p>Build me a web scraper using Python that extracts article titles and links.</p>
+  </div>
+
+  <div class="assistant-message">
+    <p>Here's the project structure:</p>
+    <pre><code>scraper/
+├── main.py
+├── scraper.py
+├── config.yaml
+└── requirements.txt</code></pre>
+
+    <div class="artifact-block">
+      <div class="artifact-header">
+        <span class="artifact-title">main.py</span>
+        <span class="artifact-lang">python</span>
+      </div>
+      <pre><code class="language-python">import argparse
+from scraper import ArticleScraper
+import yaml
+
+def load_config(path):
+    with open(path) as f:
+        return yaml.safe_load(f)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--url', required=True)
+    parser.add_argument('--config', default='config.yaml')
+    args = parser.parse_args()
+
+    config = load_config(args.config)
+    scraper = ArticleScraper(config)
+    articles = scraper.scrape(args.url)
+
+    for article in articles:
+        print(f"{article['title']}: {article['url']}")
+
+if __name__ == '__main__':
+    main()</code></pre>
+    </div>
+
+    <div class="artifact-block">
+      <div class="artifact-header">
+        <span class="artifact-title">scraper.py</span>
+        <span class="artifact-lang">python</span>
+      </div>
+      <pre><code class="language-python">import requests
+from bs4 import BeautifulSoup
+import time
+
+class ArticleScraper:
+    def __init__(self, config):
+        self.headers = config.get('headers', {})
+        self.delay = config.get('delay', 1)
+
+    def scrape(self, url):
+        response = requests.get(url, headers=self.headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        articles = []
+        for link in soup.find_all('a', class_='article-link'):
+            articles.append({
+                'title': link.text.strip(),
+                'url': link.get('href')
+            })
+        time.sleep(self.delay)
+        return articles</code></pre>
+    </div>
+
+    <pre><code class="language-yaml"># config.yaml
+headers:
+  User-Agent: "Mozilla/5.0"
+delay: 2
+output_format: json</code></pre>
+  </div>
+</div>
+</body>
+</html>

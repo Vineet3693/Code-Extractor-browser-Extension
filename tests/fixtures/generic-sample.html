@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generic Blog - JavaScript Tutorial</title></head>
+<body>
+<article class="post">
+  <h1>Building a REST API with Express.js</h1>
+  <p>In this tutorial, we'll build a simple REST API using Express.js.</p>
+
+  <h2>Step 1: Setup</h2>
+  <p>First, create a new file called <code>server.js</code>:</p>
+
+  <pre><code class="language-javascript">const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the API' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});</code></pre>
+
+  <h2>Step 2: Add Routes</h2>
+  <p>Create a routes file at <code>routes/users.js</code>:</p>
+
+  <pre><code class="language-javascript">const express = require('express');
+const router = express.Router();
+
+let users = [];
+
+router.get('/', (req, res) => {
+  res.json(users);
+});
+
+router.post('/', (req, res) => {
+  const { name, email } = req.body;
+  const user = { id: users.length + 1, name, email };
+  users.push(user);
+  res.status(201).json(user);
+});
+
+module.exports = router;</code></pre>
+
+  <h2>Step 3: Package.json</h2>
+  <pre><code class="language-json">{
+  "name": "express-api",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}</code></pre>
+
+  <h2>Step 4: Dockerfile</h2>
+  <pre><code class="language-dockerfile">FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre>
+</article>
+</body>
+</html>

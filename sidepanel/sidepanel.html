@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Extractor V3.0 - Side Panel</title>
+  <link rel="stylesheet" href="../styles/sidepanel.css">
+</head>
+
+<body>
+  <div class="sidepanel-container">
+    <header class="sidepanel-header">
+      <h1>Code Extractor <span class="version-badge">V3.0</span></h1>
+      <p class="subtitle">Extract, organize, and download code from any webpage</p>
+    </header>
+
+    <nav class="sidepanel-nav">
+      <button class="nav-btn active" data-tab="scan">Scan</button>
+      <button class="nav-btn" data-tab="files">Files</button>
+      <button class="nav-btn" data-tab="live">Live</button>
+      <button class="nav-btn" data-tab="search">Search</button>
+      <button class="nav-btn" data-tab="history">History</button>
+      <button class="nav-btn" data-tab="projects">Projects</button>
+      <button class="nav-btn" data-tab="templates">Templates</button>
+      <button class="nav-btn" data-tab="analytics">Analytics</button>
+      <button class="nav-btn" data-tab="deploy">Deploy</button>
+      <button class="nav-btn" data-tab="team">Team</button>
+      <button class="nav-btn" data-tab="github">GitHub</button>
+      <button class="nav-btn" data-tab="parsers">Parsers</button>
+      <button class="nav-btn" data-tab="settings">Settings</button>
+    </nav>
+
+    <main class="sidepanel-main">
+      <!-- SCAN TAB -->
+      <div id="scan-tab" class="tab-content active">
+        <div class="scan-controls">
+          <button id="scan-btn" class="btn btn-primary btn-full">
+            <span class="btn-icon">🔍</span> Scan Page
+          </button>
+          <button id="scan-selection-btn" class="btn btn-secondary btn-full">
+            <span class="btn-icon">📋</span> Scan Selection
+          </button>
+          <button id="merge-tabs-btn" class="btn btn-secondary btn-full">
+            <span class="btn-icon">🔀</span> Merge All Tabs
+          </button>
+          <div class="scan-options mt-2">
+            <label class="checkbox-item">
+              <input type="checkbox" id="high-visibility-toggle" checked>
+              <span>High-Visibility Highlights</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="scan-status" class="status-bar hidden">
+          <div class="spinner"></div>
+          <span id="scan-status-text">Scanning...</span>
+        </div>
+
+        <div id="scan-error" class="error-bar hidden">
+          <span id="scan-error-text">Error</span>
+          <button id="retry-btn" class="btn btn-sm">Retry</button>
+        </div>
+
+        <div id="scan-results" class="scan-results hidden">
+          <div class="results-summary">
+            <div class="summary-card">
+              <span class="summary-value" id="total-files">0</span>
+              <span class="summary-label">Files</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-value" id="total-lines">0</span>
+              <span class="summary-label">Lines</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-value" id="total-size">0</span>
+              <span class="summary-label">Size</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-value" id="duplicates">0</span>
+              <span class="summary-label">Duplicates</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-value" id="total-tokens">0</span>
+              <span class="summary-label">Tokens</span>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button id="save-project-btn" class="btn btn-primary">
+              <span class="btn-icon">💾</span> Save Project
+            </button>
+            <button id="open-in-ide-btn" class="btn btn-secondary">
+              <span class="btn-icon">🖥️</span> Open in IDE
+            </button>
+            <button id="open-note-maker-btn" class="btn btn-secondary">
+              <span class="btn-icon">📝</span> Note Maker
+            </button>
+          </div>
+
+          <div class="export-options">
+            <h3>Export Options</h3>
+            <div class="export-grid">
+              <button id="download-pdf-btn" class="export-btn">
+                <span class="export-icon">📄</span>
+                <span>PDF</span>
+              </button>
+              <button id="download-docs-btn" class="export-btn">
+                <span class="export-icon">📝</span>
+                <span>DOC</span>
+              </button>
+              <button id="download-md-btn" class="export-btn">
+                <span class="export-icon">📋</span>
+                <span>MD</span>
+              </button>
+              <button id="download-json-btn" class="export-btn">
+                <span class="export-icon">📊</span>
+                <span>JSON</span>
+              </button>
+              <button id="download-html-btn" class="export-btn">
+                <span class="export-icon">🌐</span>
+                <span>HTML</span>
+              </button>
+              <button id="download-conversation-btn" class="export-btn">
+                <span class="export-icon">💬</span>
+                <span>Chat</span>
+              </button>
+              <button id="validate-code-btn" class="export-btn">
+                <span class="export-icon">✓</span>
+                <span>Validate</span>
+              </button>
+              <button id="zip-export-btn" class="export-btn">
+                <span class="export-icon">📦</span>
+                <span>ZIP</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="project-tree-container" class="project-tree-container">
+            <h3>Project Structure</h3>
+            <div id="project-tree" class="project-tree"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILES TAB -->
+      <div id="files-tab" class="tab-content">
+        <div class="files-controls">
+          <div class="search-box">
+            <i class="search-icon">🔍</i>
+            <input type="text" id="file-search-input" placeholder="Search files (e.g. .py, utils, user)..."
+              class="input">
+          </div>
+          <div class="view-toggle">
+            <button id="view-list-btn" class="btn-icon active" title="List View">📋</button>
+            <button id="view-tree-btn" class="btn-icon" title="Tree View">📁</button>
+          </div>
+        </div>
+
+        <div id="file-actions-bar" class="file-actions-bar hidden">
+          <button id="export-selected-btn-bulk" class="btn btn-sm btn-primary">Export Selected</button>
+          <button id="delete-selected-btn-bulk" class="btn btn-sm btn-danger">Delete</button>
+          <span id="selected-count" class="selected-count">0 files selected</span>
+        </div>
+
+        <div id="file-list" class="file-list"></div>
+        <div id="file-tree-view" class="file-tree-view hidden"></div>
+      </div>
+
+      <!-- LIVE TAB -->
+      <div id="live-tab" class="tab-content">
+        <div class="live-controls">
+          <button id="live-toggle-btn" class="btn btn-primary">
+            <span class="btn-icon">🔴</span> Toggle Live
+          </button>
+          <button id="live-scan-now-btn" class="btn btn-secondary">
+            <span class="btn-icon">⚡</span> Scan Now
+          </button>
+        </div>
+        <div class="live-stats">
+          <div class="live-stat">
+            <span id="live-status-indicator" class="status-dot"></span>
+            <span id="live-status-text">Inactive</span>
+          </div>
+          <div class="live-stat">
+            <span class="stat-value" id="live-detected-count">0</span>
+            <span class="stat-label">Detected</span>
+          </div>
+          <div class="live-stat">
+            <span class="stat-value" id="live-added-count">0</span>
+            <span class="stat-label">Added</span>
+          </div>
+          <div class="live-stat">
+            <span class="stat-value" id="live-updated-count">0</span>
+            <span class="stat-label">Updated</span>
+          </div>
+          <div class="live-stat">
+            <span class="stat-value" id="live-uptime">0:00</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+        </div>
+        <div id="live-log" class="live-log"></div>
+      </div>
+
+      <!-- PROJECTS TAB -->
+      <div id="projects-tab" class="tab-content">
+        <div class="section-header">
+          <h2>Saved Projects</h2>
+          <button id="refresh-projects-btn" class="btn btn-sm">Refresh</button>
+        </div>
+        <div id="project-list" class="project-list"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="settings-tab" class="tab-content">
+        <div class="settings-section">
+          <h3>🎨 Appearance</h3>
+          <label>
+            Theme
+            <select id="theme-select" class="select">
+              <option value="dark">Dark (Default)</option>
+              <option value="light">Light</option>
+              <option value="system">System</option>
+              <option value="blue">Ocean Blue</option>
+              <option value="green">Forest Green</option>
+              <option value="purple">Royal Purple</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="settings-section">
+          <h3>⌨️ Keyboard Shortcuts</h3>
+          <div class="shortcut-list">
+            <div class="shortcut-item">
+              <span class="shortcut-key">Ctrl + S</span>
+              <span class="shortcut-desc">Scan Page</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-key">Ctrl + E</span>
+              <span class="shortcut-desc">Export to IDE</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-key">Esc</span>
+              <span class="shortcut-desc">Close Modal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>💾 Data Management</h3>
+          <button id="export-data-btn" class="btn btn-secondary">📤 Export Data</button>
+          <button id="import-data-btn" class="btn btn-secondary">📥 Import Data</button>
+          <button id="save-settings-btn" class="btn btn-primary">💾 Save Settings</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>🤖 AI Features</h3>
+          <button id="smart-name-btn" class="btn btn-secondary">✨ Smart Naming</button>
+          <button id="categorize-btn" class="btn btn-secondary">📂 Auto-Categorize</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>ℹ️ About</h3>
+          <p>Code Extractor V3.0</p>
+          <p style="color: #666; font-size: 12px;">Extract code from any webpage with ease.</p>
+        </div>
+      </div>
+
+      <!-- GITHUB TAB -->
+      <div id="github-tab" class="tab-content">
+        <div id="github-auth-section">
+          <input type="text" id="github-token-input" class="input" placeholder="GitHub Personal Access Token">
+          <button id="github-auth-btn" class="btn btn-primary">Authenticate</button>
+        </div>
+        <div id="github-main-section" class="hidden">
+          <p>Logged in as: <span id="github-username"></span></p>
+          <button id="github-logout-btn" class="btn btn-secondary">Logout</button>
+        </div>
+      </div>
+
+      <!-- NOTES TAB -->
+      <div id="notes-tab" class="tab-content">
+        <h3>Saved Notes</h3>
+        <div id="notes-list" class="notes-list"></div>
+      </div>
+
+      <!-- OTHER TABS PLACEHOLDER -->
+      <div id="search-tab" class="tab-content">
+        <div class="search-container">
+          <input type="text" id="universal-search-input" class="input" placeholder="Search all projects...">
+          <button id="universal-search-btn" class="btn btn-primary">Search</button>
+        </div>
+        <div id="search-results" class="search-results"></div>
+      </div>
+
+      <div id="history-tab" class="tab-content">
+        <h3>Version History</h3>
+        <select id="history-project-select" class="select"></select>
+        <select id="history-file-select" class="select"></select>
+        <div id="version-timeline" class="version-timeline"></div>
+      </div>
+
+      <div id="templates-tab" class="tab-content">
+        <h3>Project Templates</h3>
+        <div id="template-list" class="template-list"></div>
+      </div>
+
+      <div id="analytics-tab" class="tab-content">
+        <h3>Analytics</h3>
+        <select id="analytics-period" class="select">
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+          <option value="all">All time</option>
+        </select>
+        <div id="analytics-chart" class="analytics-chart"></div>
+      </div>
+
+      <div id="deploy-tab" class="tab-content">
+        <h3>Deploy Project</h3>
+        <button id="deploy-vercel-btn" class="btn btn-primary">Deploy to Vercel</button>
+        <button id="deploy-netlify-btn" class="btn btn-primary">Deploy to Netlify</button>
+      </div>
+
+      <div id="team-tab" class="tab-content">
+        <h3>Team Collaboration</h3>
+        <div id="team-auth-section">
+          <input type="text" id="team-name-input" class="input" placeholder="Team Name">
+          <button id="team-create-btn" class="btn btn-primary">Create Team</button>
+          <input type="text" id="team-invite-code-input" class="input" placeholder="Invite Code">
+          <button id="team-join-btn" class="btn btn-secondary">Join Team</button>
+        </div>
+        <div id="team-main-section" class="hidden">
+          <p>Team: <span id="team-name-display"></span></p>
+          <p>Role: <span id="team-role-display"></span></p>
+          <button id="team-share-btn" class="btn btn-secondary">Share Project</button>
+          <button id="team-leave-btn" class="btn btn-danger">Leave Team</button>
+        </div>
+      </div>
+
+      <div id="parsers-tab" class="tab-content">
+        <h3>Custom Parsers</h3>
+        <button id="parser-new-btn" class="btn btn-primary">New Parser</button>
+        <div id="parser-list" class="parser-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- IDE Export Modal -->
+  <div id="ide-export-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Export to IDE</h2>
+        <button id="ide-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="ide-grid" id="ide-grid">
+          <div class="ide-card active" data-ide="vscode">VS Code</div>
+          <div class="ide-card" data-ide="cursor">Cursor</div>
+          <div class="ide-card" data-ide="jetbrains">JetBrains</div>
+        </div>
+        <div class="format-grid" id="ide-format-grid">
+          <div class="format-card active" data-format="folder">Folder</div>
+          <div class="format-card" data-format="zip">ZIP</div>
+          <div class="format-card" data-format="pdf">PDF</div>
+          <div class="format-card" data-format="docs">DOC</div>
+          <div class="format-card" data-format="md">Markdown</div>
+          <div class="format-card" data-format="json">JSON</div>
+          <div class="format-card" data-format="html">HTML</div>
+        </div>
+        <div class="scope-option">
+          <label><input type="radio" name="ide-scope" value="project" checked> Entire Project</label>
+          <label><input type="radio" name="ide-scope" value="single"> Single File</label>
+        </div>
+        <div id="ide-single-file-row" class="hidden">
+          <select id="ide-file-select" class="select"></select>
+        </div>
+        <div class="extension-filter-section" id="ide-extension-filter-section">
+          <label class="section-label">Filter by Extension:</label>
+          <div id="ide-extension-list" class="extension-grid">
+            <!-- Dynamic checkboxes will be added here -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="ide-export-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="ide-export-confirm" class="btn btn-primary">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Maker Modal -->
+  <div id="note-maker-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Note Maker</h2>
+        <button id="note-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="note-title" class="input" placeholder="Note Title">
+        <textarea id="note-content" class="textarea" placeholder="Note content..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="note-modal-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="save-note-btn" class="btn btn-primary">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Results -->
+  <div id="validation-results" class="hidden">
+    <div class="validation-summary" id="validation-summary"></div>
+    <div class="validation-details" id="validation-details"></div>
+  </div>
+
+  <!-- Scripts - Load in order -->
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Code Preview Modal -->
+  <div id="code-preview-modal" class="modal hidden">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h2 id="preview-filename">File Preview</h2>
+        <button id="preview-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre id="preview-code-block" class="preview-code"></pre>
+      </div>
+      <div class="modal-footer">
+        <button id="preview-copy-btn" class="btn btn-secondary">Copy Code</button>
+        <button id="preview-close-btn" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../libs/jszip.min.js"></script>
+  <script src="../libs/FileSaver.min.js"></script>
+  <script src="../utils/constants.js"></script>
+  <script src="../utils/helpers.js"></script>
+  <script src="../utils/domUtils.js"></script>
+  <script src="../utils/regexPatterns.js"></script>
+  <script src="../utils/languageMap.js"></script>
+  <script src="../utils/validators.js"></script>
+  <script src="../utils/errorHandler.js"></script>
+  <script src="../utils/logger.js"></script>
+  <script src="../utils/messageHandler.js"></script>
+  <script src="../storage/IndexedDBHelper.js"></script>
+  <script src="../storage/UniversalSearch.js"></script>
+  <script src="../storage/VersionHistory.js"></script>
+  <script src="../utils/GitHubIntegration.js"></script>
+  <script src="../utils/TemplateManager.js"></script>
+  <script src="../utils/CodeValidator.js"></script>
+  <script src="../parsers/BaseParser.js"></script>
+  <script src="../parsers/ChatGPTParser.js"></script>
+  <script src="../parsers/ClaudeParser.js"></script>
+  <script src="../parsers/GeminiParser.js"></script>
+  <script src="../parsers/OutlierParser.js"></script>
+  <script src="../parsers/MistralParser.js"></script>
+  <script src="../parsers/PoeParser.js"></script>
+  <script src="../parsers/GitHubParser.js"></script>
+  <script src="../parsers/StackOverflowParser.js"></script>
+  <script src="../parsers/GenericParser.js"></script>
+  <script src="../parsers/ParserFactory.js"></script>
+  <script src="../core/CodeBlockExtractor.js"></script>
+  <script src="../core/FileNameDetector.js"></script>
+  <script src="../core/LanguageIdentifier.js"></script>
+  <script src="../core/TreeParser.js"></script>
+  <script src="../core/ProjectMapper.js"></script>
+  <script src="../core/DuplicateHandler.js"></script>
+  <script src="../core/ProjectAssembler.js"></script>
+  <script src="../core/CodeScanner.js"></script>
+  <script src="../core/LiveScanner.js"></script>
+  <script src="../core/IncrementalMerger.js"></script>
+  <script src="../core/ScanStateManager.js"></script>
+  <script src="../core/TabManager.js"></script>
+  <script src="../core/SmartDuplicateDetector.js"></script>
+  <script src="../core/AIFilenameRefiner.js"></script>
+  <script src="../generators/ReadmeGenerator.js"></script>
+  <script src="../generators/DependencyGenerator.js"></script>
+  <script src="../generators/TreeVisualizer.js"></script>
+  <script src="../generators/ZipGenerator.js"></script>
+  <script src="../generators/MarkdownGenerator.js"></script>
+  <script src="../generators/IDEExport.js"></script>
+  <script src="../utils/TeamCollaboration.js"></script>
+  <script src="../utils/CloudSync.js"></script>
+  <script src="../utils/CustomParserBuilder.js"></script>
+  <script src="../utils/APIBridge.js"></script>
+  <script src="../utils/VSCodeCompanion.js"></script>
+  <script src="../utils/ProjectAnalytics.js"></script>
+  <script src="../utils/DeploymentManager.js"></script>
+  <script src="../ui/CodeDiffViewer.js"></script>
+  <script src="../libs/chart.min.js"></script>
+
+  <!-- Modularized Scripts - Load BEFORE main sidepanel.js -->
+  <script src="modules/state.js"></script>
+  <script src="modules/utils.js"></script>
+  <script src="modules/messaging.js"></script>
+  <script src="modules/downloads.js"></script>
+  <script src="modules/tab-scan.js"></script>
+  <script src="modules/tab-files.js"></script>
+  <script src="modules/tab-live.js"></script>
+  <script src="modules/tab-search.js"></script>
+  <script src="modules/tab-history.js"></script>
+  <script src="modules/tab-projects.js"></script>
+  <script src="modules/tab-templates.js"></script>
+  <script src="modules/tab-analytics.js"></script>
+  <script src="modules/tab-deploy.js"></script>
+  <script src="modules/tab-team.js"></script>
+  <script src="modules/tab-github.js"></script>
+  <script src="modules/tab-parsers.js"></script>
+  <script src="modules/tab-settings.js"></script>
+  <script src="modules/tab-ai.js"></script>
+  <script src="modules/tab-merger.js"></script>
+  <script src="modules/tab-exports.js"></script>
+
+  <!-- Main Entry Point - Load AFTER modules -->
+  <script src="sidepanel.js"></script>
+</body>
+
+</html>

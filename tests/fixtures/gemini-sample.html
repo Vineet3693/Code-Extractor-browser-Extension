@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><title>Gemini Sample - Streamlit Dashboard</title></head>
+<body>
+<div class="conversation-container">
+  <div class="model-response">
+    <div class="response-content">
+      <p>Here's a Streamlit dashboard for data visualization:</p>
+
+      <code-block language="python">
+        <div class="code-block-header">
+          <span>Python</span>
+          <button>Copy</button>
+        </div>
+        <pre><code>import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+st.set_page_config(page_title="Dashboard", layout="wide")
+st.title("Data Dashboard")
+
+uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df.head())
+
+    col1, col2 = st.columns(2)
+    with col1:
+        fig = px.bar(df, x=df.columns[0], y=df.columns[1])
+        st.plotly_chart(fig)
+    with col2:
+        fig = px.scatter(df, x=df.columns[0], y=df.columns[2])
+        st.plotly_chart(fig)</code></pre>
+      </code-block>
+
+      <p>And the requirements file:</p>
+
+      <pre class="code-block">
+        <code class="language-text">streamlit==1.28.0
+pandas==2.1.0
+plotly==5.17.0</code>
+      </pre>
+    </div>
+  </div>
+</div>
+</body>
+</html>

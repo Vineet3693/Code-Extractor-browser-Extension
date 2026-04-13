@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head><title>ChatGPT Sample - RAG Application</title></head>
+<body>
+<div class="conversation">
+  <div data-message-author-role="user">
+    <div class="markdown">
+      <p>Build me a RAG (Retrieval Augmented Generation) application using Flask and LangChain.</p>
+    </div>
+  </div>
+
+  <div data-message-author-role="assistant">
+    <div class="markdown">
+      <p>Here's the project structure:</p>
+      <pre><code>rag-project/
+├── app.py
+├── config.py
+├── requirements.txt
+├── models/
+│   ├── embeddings.py
+│   └── llm_chain.py
+├── utils/
+│   ├── pdf_loader.py
+│   └── vector_store.py
+└── templates/
+    └── index.html</code></pre>
+
+      <p>Let me create each file. First, the main application:</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <span class="language-label">python</span>
+          <span class="filename-label">app.py</span>
+        </div>
+        <pre><code class="hljs language-python">from flask import Flask, render_template, request
+from models.llm_chain import get_response
+from models.embeddings import load_embeddings
+from utils.vector_store import create_store
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/query', methods=['POST'])
+def query():
+    question = request.form.get('question')
+    answer = get_response(question)
+    return {'answer': answer}
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+      </div>
+
+      <p>Now the configuration file:</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <span class="language-label">python</span>
+        </div>
+        <pre><code class="hljs language-python"># config.py
+import os
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+PINECONE_ENVIRONMENT = 'us-west1-gcp'
+INDEX_NAME = 'rag-documents'
+EMBEDDING_MODEL = 'text-embedding-ada-002'
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 200</code></pre>
+      </div>
+
+      <p>Here's the requirements file:</p>
+
+      <div class="code-block-wrapper">
+        <pre><code class="hljs language-text">flask==2.3.0
+langchain==0.0.200
+openai==0.27.0
+pinecone-client==2.2.1
+tiktoken==0.4.0
+pypdf==3.8.1</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div data-message-author-role="assistant">
+    <div class="markdown">
+      <p>Let me update the app.py to add error handling:</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-header">
+          <span class="language-label">python</span>
+          <span class="filename-label">app.py</span>
+        </div>
+        <pre><code class="hljs language-python">from flask import Flask, render_template, request, jsonify
+from models.llm_chain import get_response
+from models.embeddings import load_embeddings
+from utils.vector_store import create_store
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/query', methods=['POST'])
+def query():
+    try:
+        question = request.form.get('question')
+        if not question:
+            return jsonify({'error': 'No question provided'}), 400
+        answer = get_response(question)
+        return jsonify({'answer': answer})
+    except Exception as e:
+        logger.error(f"Query failed: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

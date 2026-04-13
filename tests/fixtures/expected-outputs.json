@@ -1,0 +1,34 @@
+{
+  "chatgpt-sample": {
+    "expectedFiles": 6,
+    "expectedLanguages": ["python", "text"],
+    "expectedTree": true,
+    "expectedFileNames": ["app.py", "config.py", "requirements.txt", "models/embeddings.py", "models/llm_chain.py", "utils/pdf_loader.py", "utils/vector_store.py", "templates/index.html"],
+    "duplicates": 1,
+    "site": "chatgpt"
+  },
+  "claude-sample": {
+    "expectedFiles": 4,
+    "expectedLanguages": ["python", "yaml"],
+    "expectedTree": true,
+    "expectedFileNames": ["main.py", "scraper.py", "config.yaml", "requirements.txt"],
+    "duplicates": 0,
+    "site": "claude"
+  },
+  "gemini-sample": {
+    "expectedFiles": 2,
+    "expectedLanguages": ["python", "text"],
+    "expectedTree": false,
+    "expectedFileNames": ["dashboard.py", "requirements.txt"],
+    "duplicates": 0,
+    "site": "gemini"
+  },
+  "generic-sample": {
+    "expectedFiles": 4,
+    "expectedLanguages": ["javascript", "json", "dockerfile"],
+    "expectedTree": false,
+    "expectedFileNames": ["server.js", "routes/users.js", "package.json", "Dockerfile"],
+    "duplicates": 0,
+    "site": "generic"
+  }
+}

@@ -1,0 +1,84 @@
+@keyframes ce-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ce-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ce-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes ce-slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ce-slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ce-slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ce-slide-out-right {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+@keyframes ce-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ce-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes ce-progress-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes ce-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes ce-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ─── UTILITY ANIMATIONS ─── */
+.ce-animate-fade-in {
+  animation: ce-fade-in var(--transition-normal) ease;
+}
+
+.ce-animate-slide-up {
+  animation: ce-slide-up var(--transition-normal) ease;
+}
+
+.ce-animate-scale-in {
+  animation: ce-scale-in var(--transition-normal) ease;
+}
+
+.ce-animate-pulse {
+  animation: ce-pulse 2s ease-in-out infinite;
+}
+
+.ce-animate-bounce {
+  animation: ce-bounce 1s ease-in-out infinite;
+}
+
+.ce-animate-shake {
+  animation: ce-shake 0.3s ease;
+}
